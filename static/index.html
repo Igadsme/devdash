@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevDash - Developer Productivity Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Landing Page -->
+    <div id="landing-page" class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+        <div class="container mx-auto px-4 py-16">
+            <div class="text-center mb-16">
+                <div class="flex items-center justify-center space-x-3 mb-6">
+                    <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+                        <i data-lucide="code" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h1 class="text-4xl font-bold text-gray-900">DevDash</h1>
+                </div>
+                <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                    The ultimate developer productivity dashboard. Track your coding progress, manage tasks, 
+                    and get AI-powered insights to boost your productivity.
+                </p>
+                <button id="login-btn" class="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-3 rounded-lg">
+                    Get Started
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <div class="bg-white rounded-lg p-6 text-center shadow-sm">
+                    <div class="mx-auto w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="code" class="w-6 h-6 text-blue-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">GitHub Integration</h3>
+                    <p class="text-gray-600 text-sm">
+                        Connect your GitHub account to track commits, pull requests, and repository activity automatically.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg p-6 text-center shadow-sm">
+                    <div class="mx-auto w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="clock" class="w-6 h-6 text-green-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Pomodoro Timer</h3>
+                    <p class="text-gray-600 text-sm">
+                        Built-in Pomodoro timer to help you stay focused and track your productive coding sessions.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg p-6 text-center shadow-sm">
+                    <div class="mx-auto w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="bar-chart-3" class="w-6 h-6 text-purple-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Visual Analytics</h3>
+                    <p class="text-gray-600 text-sm">
+                        Beautiful charts and heatmaps to visualize your coding patterns and productivity trends.
+                    </p>
+                </div>
+
+                <div class="bg-white rounded-lg p-6 text-center shadow-sm">
+                    <div class="mx-auto w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                        <i data-lucide="brain" class="w-6 h-6 text-orange-600"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">AI Insights</h3>
+                    <p class="text-gray-600 text-sm">
+                        Get personalized productivity insights and recommendations powered by AI analysis.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h2 class="text-2xl font-bold mb-6 text-center">Welcome to DevDash</h2>
+            
+            <!-- Login Form -->
+            <div id="login-form">
+                <form id="login-form-element" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Username</label>
+                        <input type="text" id="login-username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="login-password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                        Sign In
+                    </button>
+                </form>
+                <p class="mt-4 text-center text-sm text-gray-600">
+                    Don't have an account? 
+                    <a href="#" id="show-register" class="text-blue-600 hover:text-blue-800">Sign up</a>
+                </p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="hidden">
+                <form id="register-form-element" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Username</label>
+                        <input type="text" id="register-username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="register-email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" id="register-fullname" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="register-password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                        Sign Up
+                    </button>
+                </form>
+                <p class="mt-4 text-center text-sm text-gray-600">
+                    Already have an account? 
+                    <a href="#" id="show-login" class="text-blue-600 hover:text-blue-800">Sign in</a>
+                </p>
+            </div>
+
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="min-h-screen flex bg-slate-50 hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
+            <!-- Logo -->
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="code" class="w-4 h-4 text-white"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-900">DevDash</h1>
+                </div>
+            </div>
+
+            <!-- User Profile -->
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                        <i data-lucide="user" class="w-5 h-5 text-gray-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900" id="user-name">User</p>
+                        <p class="text-xs text-gray-500">Developer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 py-4 space-y-2">
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-blue-50 text-blue-600">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
+                    <span>Pomodoro Timer</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100">
+                    <i data-lucide="check-square" class="w-5 h-5"></i>
+                    <span>Tasks</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100">
+                    <i data-lucide="github" class="w-5 h-5"></i>
+                    <span>GitHub Stats</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100">
+                    <i data-lucide="brain" class="w-5 h-5"></i>
+                    <span>AI Insights</span>
+                </a>
+            </nav>
+
+            <!-- Logout -->
+            <div class="px-6 py-4 border-t border-gray-200">
+                <button id="logout-btn" class="w-full flex items-center justify-center space-x-2 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg">
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Dashboard</h2>
+                        <p class="text-gray-600">Track your productivity and coding progress</p>
+                    </div>
+                    <div class="flex items-center space-x-6">
+                        <div class="text-center">
+                            <p class="text-sm font-medium text-gray-500">Today's Commits</p>
+                            <p class="text-2xl font-bold text-gray-900" id="today-commits">0</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-sm font-medium text-gray-500">Focus Time</p>
+                            <p class="text-2xl font-bold text-gray-900" id="today-focus">0h</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="p-6 h-full overflow-y-auto">
+                <!-- Top Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
+                    <!-- Pomodoro Timer -->
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">Pomodoro Timer</h3>
+                            <i data-lucide="clock" class="w-5 h-5 text-blue-600"></i>
+                        </div>
+                        <div class="text-center">
+                            <div class="relative w-32 h-32 mx-auto mb-6">
+                                <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="6" fill="none" class="text-gray-200"/>
+                                    <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="6" fill="none" 
+                                            stroke-dasharray="283" stroke-dashoffset="283" class="text-blue-600 transition-all duration-1000" id="timer-progress"/>
+                                </svg>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-2xl font-bold text-gray-900" id="timer-display">25:00</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-center space-x-4 mb-4">
+                                <button id="start-timer" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                    <i data-lucide="play" class="w-4 h-4"></i>
+                                </button>
+                                <button id="pause-timer" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg" disabled>
+                                    <i data-lucide="pause" class="w-4 h-4"></i>
+                                </button>
+                                <button id="reset-timer" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+                                    <i data-lucide="square" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                            <div class="text-sm text-gray-600" id="timer-session">Work Session 1</div>
+                        </div>
+                    </div>
+
+                    <!-- Tasks -->
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">Today's Tasks</h3>
+                            <button id="add-task-btn" class="text-blue-600 hover:text-blue-800">
+                                <i data-lucide="plus" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        <div id="tasks-list" class="space-y-3 max-h-64 overflow-y-auto">
+                            <div class="text-center py-4 text-gray-500">No tasks yet. Create your first task!</div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Overview -->
+                    <div class="bg-white rounded-lg p-6 shadow-sm xl:col-span-1 lg:col-span-2 xl:col-span-1">
+                        <h3 class="text-lg font-semibold mb-4">This Week</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center p-4 bg-blue-50 rounded-lg">
+                                <i data-lucide="code" class="text-2xl text-blue-600 mb-2 mx-auto"></i>
+                                <p class="text-2xl font-bold text-gray-900" id="week-commits">0</p>
+                                <p class="text-sm text-gray-600">Commits</p>
+                            </div>
+                            <div class="text-center p-4 bg-green-50 rounded-lg">
+                                <i data-lucide="clock" class="text-2xl text-green-600 mb-2 mx-auto"></i>
+                                <p class="text-2xl font-bold text-gray-900" id="week-focus">0h</p>
+                                <p class="text-sm text-gray-600">Focus Time</p>
+                            </div>
+                            <div class="text-center p-4 bg-purple-50 rounded-lg">
+                                <i data-lucide="check-square" class="text-2xl text-purple-600 mb-2 mx-auto"></i>
+                                <p class="text-2xl font-bold text-gray-900" id="week-tasks">0</p>
+                                <p class="text-sm text-gray-600">Tasks Done</p>
+                            </div>
+                            <div class="text-center p-4 bg-orange-50 rounded-lg">
+                                <i data-lucide="flame" class="text-2xl text-orange-600 mb-2 mx-auto"></i>
+                                <p class="text-2xl font-bold text-gray-900" id="week-streak">7</p>
+                                <p class="text-sm text-gray-600">Day Streak</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+                    <!-- GitHub Chart -->
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">GitHub Activity</h3>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="github-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Focus Chart -->
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">Focus Time Trends</h3>
+                            <span class="text-sm text-gray-600">Goal: 6h/day</span>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="focus-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Insights -->
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                    <div class="xl:col-span-2 bg-white rounded-lg p-6 shadow-sm">
+                        <h3 class="text-lg font-semibold mb-4">Activity Heatmap</h3>
+                        <div class="h-32 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <p class="text-gray-500">Activity heatmap will be displayed here</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold">AI Insights</h3>
+                            <i data-lucide="brain" class="w-5 h-5 text-purple-600"></i>
+                        </div>
+                        <div id="insights-list" class="space-y-4">
+                            <div class="text-center py-4">
+                                <p class="text-gray-500 mb-4">No insights available yet. Generate your first insights!</p>
+                                <button id="generate-insights" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg">
+                                    Generate Insights
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Task Modal -->
+    <div id="task-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">Create New Task</h3>
+                <button id="close-task-modal" class="text-gray-400 hover:text-gray-600">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <form id="task-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Task Title</label>
+                    <input type="text" id="task-title" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="task-description" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Priority</label>
+                    <select id="task-priority" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <option value="low">Low Priority</option>
+                        <option value="medium" selected>Medium Priority</option>
+                        <option value="high">High Priority</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+                    Create Task
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
