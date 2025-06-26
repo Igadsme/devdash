@@ -133,7 +133,3 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 3. Make your changes
 4. Test thoroughly
 5. Submit a pull request
-
-## License
-
-This project is open source and available under the MIT License.
