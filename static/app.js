@@ -134,6 +134,8 @@ class DevDashApp {
         } catch (error) {
             alert('Login failed. Please check your credentials.');
         }
+
+        
     }
 
     async handleRegister(e) {
