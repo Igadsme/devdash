@@ -1,10 +1,12 @@
 // DevDash JavaScript Application
 class DevDashApp {
+    
     constructor() {
         this.apiBase = window.location.origin.replace(':5000', ':8000');
         this.token = localStorage.getItem('auth_token');
         this.user = null;
         this.timer = {
+            
             timeLeft: 25 * 60,
             isRunning: false,
             session: 1,
